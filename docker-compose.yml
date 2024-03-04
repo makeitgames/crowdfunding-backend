@@ -1,0 +1,46 @@
+# Use postgres/example user/password credentials
+version: '3.8'
+services:
+  db:
+    image: postgres
+    platform: linux/amd64
+    restart: always
+    volumes:
+      -  ~/databases/postgres/bondbond/local:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: crowdfunding
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    platform: linux/amd64
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: pgsql
+      ADMINER_DEFAULT_DB_HOST: db
+      ADMINER_DEFAULT_DB_NAME: crowdfunding
+  pgadmin:
+    image: dpage/pgadmin4
+    platform: linux/amd64
+    container_name: pgadmin4_backend
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@treg.co.th
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  redis:
+    image: redis
+    platform: linux/amd64
+    restart: always
+    ports:
+      - 6379:6379
+
+volumes:
+  pgadmin-data:
